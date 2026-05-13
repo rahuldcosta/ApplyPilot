@@ -1,0 +1,74 @@
+# ApplyPilot search configuration
+# Edit this file to refine your job search queries.
+
+defaults:
+  location: "Bengaluru,Karnataka,India"
+  distance: 200
+  hours_old: 72
+  results_per_site: 50
+
+locations:
+  - location: "Bengaluru,Karnataka,India"
+    remote: false
+
+queries:
+  - query: "Staff Engineer"
+    tier: 1
+  - query: "Principal Engineer"
+    tier: 2
+  - query: "Senior Staff Engineer"
+    tier: 3
+  - query: "Lead Backend Engineer"
+    tier: 3
+  - query: "Backend Architect"
+    tier: 3
+  - query: "Software Architect"
+    tier: 3
+  - query: "Platform Engineer"
+    tier: 3
+  - query: "Backend Platform Engineer"
+    tier: 3
+  - query: "Engineering Manager"
+    tier: 3
+  - query: "Technical Lead"
+    tier: 3
+  - query: "Backend Lead"
+    tier: 3
+  - query: "Principal Backend Engineer"
+    tier: 3
+  - query: "Distributed Systems Engineer"
+    tier: 3
+  - query: "Infrastructure Engineer"
+    tier: 3
+  - query: "Core Platform Engineer"
+    tier: 3
+  - query: "Developer Platform Engineer"
+    tier: 3
+  - query: "Site Reliability Engineer"
+    tier: 3
+  - query: "SRE Platform Engineer"
+    tier: 3
+  - query: "Cloud Platform Engineer"
+    tier: 3
+  - query: "Engineering Productivity Engineer"
+    tier: 3
+  - query: "Staff Software Engineer"
+    tier: 3
+  - query: "Principal Software Engineer"
+    tier: 3
+  - query: "Senior Backend Engineer"
+    tier: 3
+  - query: "Technical Architect"
+    tier: 3
+  - query: "Solutions Architect"
+    tier: 3
+  - query: "Application Architect"
+    tier: 3
+  - query: "Engineering Lead"
+    tier: 3
+  - query: "Software Development Engineer IV"
+    tier: 3
+  - query: "SDE 4"
+    tier: 3
+  - query: "Senior Technical Lead"
+    tier: 3

@@ -1,0 +1,66 @@
+========= JOB ==========
+
+{'url': 'https://www.linkedin.com/jobs/view/4407822452', 'title': 'Java Engineer', 'salary': None, 'description': '**Job Description**\nWorks in the area of Software Engineering, which encompasses the development, maintenance and optimization of software solutions/applications.\n  \n  \n\n* Applies scientific methods to analyse and solve software engineering problems.\n* He/she is responsible for the development and application of software engineering practice and knowledge, in research, design, development and maintenance.\n* His/her work requires the exercise of original thought and judgement and the ability to supervise the technical and administrative work of other software engineers.\n* The software engineer builds skills and expertise of his/her software engineering discipline to reach standard software engineer skills expectations for the applicable role, as defined in Professional Communities.\n* The software engineer collaborates and acts as team player with other software engineers and stakeholders.\n\n**Job Description - Grade Specific**\nHas more than a year of relevant work experience. Solid understanding of programming concepts, software design and software development principles. Consistently works to direction with minimal supervision, producing accurate and reliable results. Individuals are expected to be able to work on a range of tasks and problems, demonstrating their ability to apply their skills and knowledge. Organises own time to deliver against tasks set by others with a mid term horizon. Works co-operatively with others to achieve team goals and has a direct and positive impact on project performance and make decisions based on their understanding of the situation, not just the rules.', 'location': 'Bengaluru, Karnataka, India', 'site': 'linkedin', 'strategy': 'jobspy', 'discovered_at': '2026-05-10T06:19:14.020634+00:00', 'full_description': '**Job Description**\nWorks in the area of Software Engineering, which encompasses the development, maintenance and optimization of software solutions/applications.\n  \n  \n\n* Applies scientific methods to analyse and solve software engineering problems.\n* He/she is responsible for the development and application of software engineering practice and knowledge, in research, design, development and maintenance.\n* His/her work requires the exercise of original thought and judgement and the ability to supervise the technical and administrative work of other software engineers.\n* The software engineer builds skills and expertise of his/her software engineering discipline to reach standard software engineer skills expectations for the applicable role, as defined in Professional Communities.\n* The software engineer collaborates and acts as team player with other software engineers and stakeholders.\n\n**Job Description - Grade Specific**\nHas more than a year of relevant work experience. Solid understanding of programming concepts, software design and software development principles. Consistently works to direction with minimal supervision, producing accurate and reliable results. Individuals are expected to be able to work on a range of tasks and problems, demonstrating their ability to apply their skills and knowledge. Organises own time to deliver against tasks set by others with a mid term horizon. Works co-operatively with others to achieve team goals and has a direct and positive impact on project performance and make decisions based on their understanding of the situation, not just the rules.', 'application_url': 'None', 'detail_scraped_at': '2026-05-10T06:19:14.020634+00:00', 'detail_error': None, 'fit_score': 10, 'score_reasoning': 'Software Engineering, development, maintenance\nSCORE: 10\nKEYWORDS: Software Engineering, development, maintenance', 'scored_at': '2026-05-11T04:09:21.326499+00:00', 'tailored_resume_path': None, 'tailored_at': None, 'tailor_attempts': 2, 'cover_letter_path': None, 'cover_letter_at': None, 'cover_attempts': 0, 'applied_at': None, 'apply_status': None, 'apply_error': None, 'apply_attempts': 0, 'agent_id': None, 'last_attempted_at': None, 'apply_duration_ms': None, 'apply_task_id': None, 'verification_confidence': None}
+
+===================================
+
+
+========== profile ==========
+
+{'personal': {'full_name': 'Rahul Dcosta', 'preferred_name': 'Rahul', 'email': 'rahuldc999@gmail.com', 'phone': '+919538914603', 'city': 'Bengaluru', 'province_state': 'Karnataka', 'country': 'India', 'postal_code': '560067', 'address': '302 A Hilife nature belatur kadugodi', 'linkedin_url': 'https://www.linkedin.com/in/rahul-dcosta/', 'github_url': 'https://github.com/rahuldcosta', 'portfolio_url': '', 'website_url': '', 'password': 'test'}, 'work_authorization': {'legally_authorized_to_work': True, 'require_sponsorship': False, 'work_permit_type': ''}, 'compensation': {'salary_expectation': '5100000', 'salary_currency': 'INR', 'salary_range_min': '5000000', 'salary_range_max': '6000000'}, 'experience': {'years_of_experience_total': '10', 'education_level': 'Master of Computer Applications (MCA)', 'current_title': 'Development Team Lead', 'target_role': 'Staff Engineer, Principal Engineer, Senior Staff Engineer, Lead Backend Engineer, Platform Engineer, Backend Platform Engineer, Engineering Manager, Technical Lead, Backend Lead, Principal Backend Engineer, Core Platform Engineer, Developer Platform Engineer, Staff Software Engineer, Principal Software Engineer, Senior Backend Engineer, Engineering Lead, Senior Technical Lead'}, 'skills_boundary': {'programming_languages': ['Java', 'C', 'R', 'Python', 'Groovy', 'JavaScript'], 'frameworks': ['Spring MVC', 'Spring Boot', 'Apache Camel', 'Bootstrap', 'jQuery', 'Quartz', 'Lucene', 'Solr', 'Kafka', 'GCP Pub/Sub', 'TestNG', 'JUnit'], 'tools': ['Google Cloud Platform (GCP)', 'BigQuery', 'MySQL', 'Oracle SQL', 'Jenkins', 'Rundeck', 'Sonar', 'Veracode', 'Maven', 'Git', 'Jira', 'Rally']}, 'resume_facts': {'preserved_companies': ['Sabre', 'SESA Sterlite Limited'], 'preserved_projects': ['Lodging Retailer (LR) - Corporate Preferencing', 'Persona Based Subscription Model', 'Squatter Rates Engine', 'Agency and Supplier Preferencing', 'Field Rule Engine for Checkout UI', 'Airline Seat Map Exit Row Booking Enhancements', 'Hotel Relevance Engine'], 'preserved_school': 'Goa University', 'real_metrics': ['$700K+ annual recurring revenue generated', 'Reduced technical errors by 50%', 'Reduced migration effort by 50%', 'Improved code quality metrics by 23.4%', 'Increased shopping-to-booking ratio to 34%', 'Avoided $50K accessibility penalties', 'Migrated 2500 automation test cases', 'Reduced QA load by 30%', 'Reduced Maven build time from 30 minutes to under 4 minutes', 'Generated $5M annual revenue from exit row booking enhancements', 'Reduced processing time from 2 hours to 20 minutes', 'Reduced manual effort by 90%']}, 'eeo_voluntary': {'gender': 'Decline to self-identify', 'race_ethnicity': 'Decline to self-identify', 'veteran_status': 'Decline to self-identify', 'disability_status': 'Decline to self-identify'}, 'availability': {'earliest_start_date': '45', 'available_for_full_time': 'Yes', 'available_for_contract': 'No'}}
+
+
+
+PRompt is
+You are a resume tailoring engine.
+
+Return ONLY valid JSON.
+
+Do NOT include:
+- markdown
+- explanations
+- comments
+- code fences
+- analysis
+- additional text
+
+The JSON MUST follow this EXACT schema:
+
+{
+  "title": "string",
+  "summary": "string",
+  "skills": {
+    "Languages": "comma separated string",
+    "Frameworks": "comma separated string",
+    "DevOps & Infra": "comma separated string",
+    "Databases": "comma separated string",
+    "Tools": "comma separated string"
+  },
+  "experience": [
+    {
+      "header": "string",
+      "subtitle": "string",
+      "bullets": [
+        "string"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "header": "string",
+      "subtitle": "string",
+      "bullets": [
+        "string"
+      ]
+    }
+  ],
+  "education": "string"
+}
+
+Rules:
+- All JSON arrays and objects MUST be properly closed.
+- Do not invent companies or technologies.
+- Do not repeat keywords excessively.
+- Keep bullets concise.
+- Experience and projects must remain separate sections.
+- Return exactly one JSON object.

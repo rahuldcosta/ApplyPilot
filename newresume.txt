@@ -1,0 +1,163 @@
+{
+  "personal": {
+    "full_name": "Rahul Dcosta",
+    "preferred_name": "Rahul",
+    "phone": "+91 9538914603",
+    "email": "rahuldc999@gmail.com",
+    "city": "Bangalore",
+    "province_state": "Karnataka",
+    "country": "India",
+    "postal_code": "560067",
+    "linkedin_url": "https://linkedin.com/in/rahul-dcosta",
+    "github_url": "https://github.com/rahuldcosta"
+  },
+  "professional_summary": "Development Team Lead with 10+ years of experience designing scalable backend systems, distributed microservices, and cloud-native applications. Expertise in Java 8+, Spring Boot, REST APIs, Kafka, Lucene, GCP Pub/Sub, and event-driven architectures. Proven experience leading engineering teams and delivering measurable business impact through scalable enterprise solutions.",
+  "skills": {
+    "languages": [
+      "Java 8+",
+      "Groovy",
+      "Python (Basics)",
+      "C",
+      "R"
+    ],
+    "backend_apis": [
+      "Spring Boot",
+      "Spring MVC",
+      "REST APIs",
+      "SOAP",
+      "Microservices",
+      "Kafka",
+      "GCP Pub/Sub",
+      "Lucene",
+      "Solr"
+    ],
+    "cloud_devops": [
+      "Google Cloud Platform (GCP)",
+      "Jenkins",
+      "Maven",
+      "Git",
+      "Rundeck",
+      "SonarQube",
+      "Veracode"
+    ],
+    "databases": [
+      "MySQL",
+      "Oracle SQL",
+      "BigQuery"
+    ],
+    "testing_methodologies": [
+      "JUnit",
+      "TestNG",
+      "TDD",
+      "CI/CD",
+      "Agile",
+      "Scrum"
+    ],
+    "frontend": [
+      "HTML5",
+      "CSS3",
+      "JavaScript",
+      "jQuery",
+      "Bootstrap"
+    ]
+  },
+  "experience": [
+    {
+      "company": "Sabre",
+      "title": "Development Team Lead",
+      "duration": "Sep 2022 - Present",
+      "project": "Lodging Retailer (LR) - Corporate Preferencing",
+      "location": "Bangalore, India",
+      "bullets": [
+        "Led development of a scalable rule-driven filtering engine supporting thousands of concurrent rule evaluations with low-latency performance.",
+        "Generated over $700K annual recurring revenue by enabling real-time property and rate suppression for enterprise clients across 10,000+ mappings.",
+        "Designed deterministic ranking logic using Rate Code and Client ID signals to influence global hotel ranking programs.",
+        "Built asynchronous analytics pipelines using GCP Pub/Sub with zero impact on customer-facing response times.",
+        "Mentored engineers through code reviews and pair programming, reducing technical defects by 50%.",
+        "Created an S2C to S1C migration template reducing manual migration effort by 50%."
+      ]
+    },
+    {
+      "company": "Sabre",
+      "title": "Senior Software Developer",
+      "duration": "Jun 2021 - Sep 2022",
+      "project": "Persona-Based Subscription Model & Squatter Rates Engine",
+      "bullets": [
+        "Improved maintainability and code quality by refactoring legacy services and resolving SonarQube issues.",
+        "Increased shopping-to-booking ratio to 34% by developing a rates engine for agency-exclusive hotel pricing."
+      ]
+    },
+    {
+      "company": "Sabre",
+      "title": "Contributor Software Developer",
+      "duration": "Nov 2018 - Jun 2021",
+      "project": "Agency & Supplier Preferencing Platform",
+      "bullets": [
+        "Developed scalable REST and SOAP APIs contributing to 50% of overall project functionality.",
+        "Partnered with UX teams to build WCAG 2.0 compliant interfaces to avoid accessibility penalties.",
+        "Migrated 2500+ API automation test cases into a new CI/CD framework for 100% automation coverage.",
+        "Reduced QA workload by 30% through improved unit testing and developer-led automation initiatives."
+      ]
+    },
+    {
+      "company": "Sabre",
+      "title": "Associate Software Developer",
+      "duration": "Jul 2016 - Nov 2018",
+      "project": "Field Rule Engine & Airline Seat Map Enhancements",
+      "bullets": [
+        "Enabled exit-row booking capabilities that increased airline seat availability and generated $5M annual revenue.",
+        "Built a 'Quick Build' tool reducing Maven build times from 30 minutes to under 4 minutes.",
+        "Replaced 14K lines of custom JavaScript with scalable Bootstrap-based alert and modal frameworks."
+      ]
+    },
+    {
+      "company": "Sabre",
+      "title": "Software Developer Intern",
+      "duration": "Jan 2016 - Jul 2016",
+      "project": "Hotel Relevance Engine",
+      "bullets": [
+        "Developed a log extraction service reducing analytics processing time from 2 hours to 20 minutes.",
+        "Automated engine workflows using Apache Oozie, reducing manual effort by 90%."
+      ]
+    },
+    {
+      "company": "SESA Sterlite Limited",
+      "title": "Associate Plants Operations",
+      "duration": "Jul 2011 - Jun 2013",
+      "project": "Inventory Data Digitization",
+      "bullets": [
+        "Managed production and inventory data digitization using SAP with high accuracy.",
+        "Created operational Excel dashboards for stock and inventory monitoring."
+      ]
+    }
+  ],
+  "education": {
+    "degree": "Master of Computer Applications (MCA)",
+    "university": "Goa University",
+    "duration": "2013 - 2016",
+    "cpi": "8.49"
+  },
+  "accomplishments": [
+    "2nd Place – Global Hackathon for Dynamic Sponsored Properties (2025)",
+    "1st Place – Global Big Pitch for Travel Mate (2016)",
+    "1st Place – Global Hackathon for 1-Click Modify (2016)",
+    "Speaker at GIDS Summit on Web Accessibility & Cross-Platform Development (2018)"
+  ],
+  "areas_of_expertise": [
+    "Distributed Systems",
+    "Event-Driven Architecture",
+    "System Design",
+    "Performance Optimization",
+    "Cloud-Native Applications",
+    "Technical Leadership",
+    "CI/CD Pipelines",
+    "API Development",
+    "High Availability Systems"
+  ],
+  "interests": [
+    "Dancing",
+    "Table Tennis",
+    "Gardening",
+    "Organizing Cultural Events"
+  ]
+}

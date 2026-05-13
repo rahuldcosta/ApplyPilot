@@ -1,0 +1,3 @@
+source venv/bin/activate.fish
+pip uninstall applypilot
+pip install -e .

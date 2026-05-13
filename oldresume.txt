@@ -1,0 +1,191 @@
+RAHUL CAJETAN D’COSTA
+Development Team Lead
+
+(+91) 953-891-4603
+Bangalore, Karnataka, India – 560067
+Email: rahuldc999@gmail.com
+LinkedIn: https://www.linkedin.com/in/rahul-dcosta/
+GitHub: https://github.com/rahuldcosta
+
+--------------------------------------------------
+SUMMARY
+--------------------------------------------------
+
+Lead Software Engineer with 10+ years of experience building and scaling distributed, API-driven backend systems. Specialized in Java (8+), Spring, and microservices with 6+ years of expertise delivering high-performance retail and rule-based platforms in cloud environments.
+
+Experienced in search systems (Lucene), event-driven messaging (Kafka, GCP Pub/Sub), and cloud-native services on Google Cloud Platform (GCP). Strong ownership mindset with proven success leading ambiguous initiatives from POC to production while resolving complex cross-team production challenges.
+
+Recognized for mentoring engineers, driving engineering excellence, and fostering accountability and collaboration.
+
+--------------------------------------------------
+SKILLS
+--------------------------------------------------
+
+Programming Languages:
+- Java 8+
+- C
+- R Programming
+- Python (Basics)
+- Groovy
+
+Domain Knowledge:
+- Airline
+- Hotel
+- GDS
+- Rule Engine
+- Corporate Travel
+
+Frontend:
+- HTML5
+- CSS3
+- Bootstrap 3
+- JavaScript ES5
+- JQuery
+
+Backend / API:
+- Microservices
+- SOAP
+- REST
+- Spring MVC
+- Spring Boot
+- Lucene
+- Kafka
+- GCP Pub/Sub
+
+Databases:
+- MySQL
+- Oracle SQL
+- BigQuery
+
+Frameworks & Tools:
+- Google Cloud Platform (GCP)
+- Solr
+- Apache Camel
+- Quartz
+- TDD
+- TestNG
+- JUnit
+- Sonar
+- Veracode
+- Jenkins
+- Rundeck
+- Rally
+- Maven
+- Git
+- Jira
+- Agile
+- Scrum
+
+--------------------------------------------------
+WORK EXPERIENCE
+--------------------------------------------------
+
+Sabre
+Development Team Lead
+Sep 2022 – Present
+
+Project: Lodging Retailer (LR) - Corporate Preferencing
+Technologies: Java 8, Microservices, Spring, GCP, Streaming
+
+- Led end-to-end development of a high-scale rule-driven filtering engine supporting thousands of concurrent rules with low-latency performance.
+- Generated $700K+ annual recurring revenue by enabling real-time property/rate suppression for enterprise clients.
+- Delivered deterministic ranking logic using Rate Code and Client ID signals for global hotel ranking programs.
+- Designed a non-blocking asynchronous analytics pipeline using GCP Pub/Sub with structured JSON event streaming.
+- Reused 80% of an existing API framework and enhanced modularized SOAP & REST implementations.
+- Mentored engineers through code reviews and pair programming, reducing technical errors by 50%.
+- Built an s2c to s1c converter template reducing migration effort by 50% and saving approximately $5,000 annually.
+- Collaborated with the LGS Winglets tech community to improve systems, increasing user satisfaction by 15%.
+
+--------------------------------------------------
+
+Sabre
+Senior Software Developer
+Jun 2021 – Sep 2022
+
+Project: Persona Based Subscription Model & Squatter Rates Engine
+Technologies: Java 8, Microservices, Spring
+
+- Refactored legacy code and resolved Sonar issues improving maintainability and increasing code quality metrics by 23.4%.
+- Increased shopping-to-booking ratio to 34% by developing a squatter rates engine for agency-exclusive hotel rates.
+
+--------------------------------------------------
+
+Sabre
+Contributor Software Developer
+Nov 2018 – Jun 2021
+
+Project: Agency and Supplier Preferencing
+Technologies: Java 8, Microservices, Spring, Lucene, WCAG, HTML, JavaScript
+
+- Implemented scalable SOAP & REST APIs contributing to 50% of project requirements.
+- Worked with UX teams to build WCAG 2.0 compliant interfaces helping avoid $50K in accessibility penalties.
+- Migrated 2500 API automation test cases to the Nimbus framework achieving 100% CI/CD coverage.
+- Introduced TDD practices reducing QA load by 30% and improving JUnit coverage by 10%.
+
+--------------------------------------------------
+
+Sabre
+Associate Software Developer
+Jul 2016 – Nov 2018
+
+Project: Field Rule Engine for Checkout UI
+Technologies: Java 7, JavaScript, JQuery, Velocity, Bootstrap
+
+- Reduced 14K lines of custom JavaScript by creating Bootstrap-based alert and modal solutions improving maintainability by 40%.
+- Built reusable automation tooling reducing execution setup time by 30 minutes per run.
+
+Project: Airline Seat Map Exit Row Booking Enhancements
+Technologies: HTML, Velocity, Java, WCAG, Shell
+
+- Added exit seat booking functionality increasing seat availability by 20% and generating $5M annual revenue.
+- Developed WCAG-compliant UI changes helping avoid $200K in accessibility penalties.
+- Created “Quick Build” tooling reducing Maven build time from 30 minutes to under 4 minutes.
+
+--------------------------------------------------
+
+Sabre
+Software Developer Intern
+Jan 2016 – Jul 2016
+
+Project: Hotel Relevance Engine
+Technologies: Hadoop, Oozie, Java, Spark, Shell Script
+
+- Developed a log extraction service reducing processing time from 2 hours to 20 minutes.
+- Automated workflows using Apache Oozie reducing manual effort by 90%.
+
+--------------------------------------------------
+
+SESA Sterlite Limited
+Associate Plants Operations
+Jul 2011 – Jun 2013
+
+- Digitized iron ore production data in SAP maintaining accurate inventory tracking.
+- Created Excel dashboards and visualizations for daily stock monitoring.
+
+--------------------------------------------------
+ACCOMPLISHMENTS
+--------------------------------------------------
+
+- 2025: Awarded 2nd Place in Global Hackathon for Dynamic Sponsored Properties
+- 2018: Presented Web Accessibility and Cross Platform Development at GIDS 18 Summit, IIS Bangalore
+- 2018: Conducted a 6-hour Bootstrap 4 workshop at QUARK 18, BITS Pilani Goa
+- 2016: Awarded 1st Place in Global Big Pitch for Travel Mate
+- 2016: Awarded 1st Place in Global Hackathon for 1-Click Modify
+
+--------------------------------------------------
+EDUCATION
+--------------------------------------------------
+
+Goa University, India
+Master of Computer Applications (MCA)
+2013 – 2016
+CPI: 8.49
+
+--------------------------------------------------
+HOBBIES
+--------------------------------------------------
+
+- Dancing
+- Table Tennis
+- Gardening
+- Organizing Cultural Events
