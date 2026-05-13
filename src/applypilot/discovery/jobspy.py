@@ -1,4 +1,4 @@
-"""JobSpy-based job discovery: searches Indeed, LinkedIn, Glassdoor, ZipRecruiter.
+"""JobSpy-based job discovery: searches Indeed, LinkedIn, Glassdoor, cruiter.
 
 Uses python-jobspy to scrape multiple job boards, deduplicates results,
 parses salary ranges, and stores everything in the ApplyPilot database.
@@ -96,7 +96,11 @@ def _location_ok(location: str | None, accept: list[str], reject: list[str]) -> 
         return True  # unknown location -- keep it, let scorer decide
 
     loc = location.lower()
-
+    # print("\n=== LOCATION CONFIGURED ===")
+    # print(loc)
+    # print(accept)
+    # print(reject)
+    # print("\n=== LOCATION CONFIGURED END ===")
     # Remote jobs always OK
     if any(r in loc for r in ("remote", "anywhere", "work from home", "wfh", "distributed")):
         return True
@@ -108,7 +112,10 @@ def _location_ok(location: str | None, accept: list[str], reject: list[str]) -> 
 
     # Accept matches
     for a in accept:
-        if a.lower() in loc:
+        # Support comma-separated aliases
+        aliases = [x.strip().lower() for x in a.split(",")]
+
+        if any(alias in loc for alias in aliases):
             return True
 
     # No match -- reject unknown
@@ -269,12 +276,45 @@ def _run_one_search(
         return {"new": 0, "existing": 0, "errors": 0, "filtered": 0, "total": 0, "label": label}
 
     # Filter by location before storing
+#     before = len(df)
+#     df = df[df.apply(lambda row: _location_ok(
+#         str(row.get("location", "")) if str(row.get("location", "")) != "nan" else None,
+#         accept_locs, reject_locs,
+#     ), axis=1)]
+#     filtered = before - len(df)
+    # Filter by location before storing
     before = len(df)
-    df = df[df.apply(lambda row: _location_ok(
-        str(row.get("location", "")) if str(row.get("location", "")) != "nan" else None,
-        accept_locs, reject_locs,
-    ), axis=1)]
+
+    accepted_locs_found = []
+    rejected_locs_found = []
+
+    def check_location(row):
+        loc = str(row.get("location", ""))
+
+        if loc == "nan":
+            loc = None
+
+        is_ok = _location_ok(loc, accept_locs, reject_locs)
+
+        if is_ok:
+            accepted_locs_found.append(loc)
+        else:
+            rejected_locs_found.append(loc)
+
+        return is_ok
+
+    df = df[df.apply(check_location, axis=1)]
+
     filtered = before - len(df)
+
+    # print("\n=== ACCEPTED LOCATIONS ===")
+    # print(list(set(accepted_locs_found)))
+    #
+    # print("\n=== REJECTED LOCATIONS ===")
+    # print(list(set(rejected_locs_found)))
+
+    print(f"\nFiltered out {filtered} jobs")
+    print(f"Remaining jobs: {len(df)}")
 
     conn = get_connection()
     new, existing = store_jobspy_results(conn, df, s["query"])
@@ -294,14 +334,14 @@ def search_jobs(
     location: str,
     sites: list[str] | None = None,
     remote_only: bool = False,
-    results_per_site: int = 50,
-    hours_old: int = 72,
+    results_per_site: int = 500,
+    hours_old: int = 168,
     proxy: str | None = None,
     country_indeed: str = "usa",
 ) -> dict:
     """Run a single job search via JobSpy and store results in DB."""
-    if sites is None:
-        sites = ["indeed", "linkedin", "zip_recruiter"]
+#     if sites is None:
+    sites = ["indeed", "linkedin"]
 
     proxy_config = parse_proxy(proxy) if proxy else None
 
@@ -363,13 +403,13 @@ def _full_crawl(
     locations: list[str] | None = None,
     sites: list[str] | None = None,
     results_per_site: int = 100,
-    hours_old: int = 72,
+    hours_old: int = 168,
     proxy: str | None = None,
     max_retries: int = 2,
 ) -> dict:
     """Run all search queries from search config across all locations."""
-    if sites is None:
-        sites = ["indeed", "linkedin", "zip_recruiter"]
+#     if sites is None:
+    sites = ["indeed", "linkedin"]
 
     # Build search combinations from config
     queries = search_cfg.get("queries", [])

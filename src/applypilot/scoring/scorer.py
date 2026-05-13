@@ -137,29 +137,50 @@ def run_scoring(limit: int = 0, rescore: bool = False) -> dict:
     errors = 0
     results: list[dict] = []
 
+    now = datetime.now(timezone.utc).isoformat()
+
     for job in jobs:
         result = score_job(resume_text, job)
-        result["url"] = job["url"]
+
         completed += 1
 
         if result["score"] == 0:
             errors += 1
 
-        results.append(result)
-
         log.info(
             "[%d/%d] score=%d  %s",
-            completed, len(jobs), result["score"], job.get("title", "?")[:60],
+            completed,
+            len(jobs),
+            result["score"],
+            job.get("title", "?")[:60],
         )
 
-    # Write scores to DB
-    now = datetime.now(timezone.utc).isoformat()
-    for r in results:
+        # Write immediately to DB
         conn.execute(
-            "UPDATE jobs SET fit_score = ?, score_reasoning = ?, scored_at = ? WHERE url = ?",
-            (r["score"], f"{r['keywords']}\n{r['reasoning']}", now, r["url"]),
+            """
+            UPDATE jobs
+            SET
+                fit_score = ?,
+                score_reasoning = ?,
+                scored_at = ?
+            WHERE url = ?
+            """,
+            (
+                result["score"],
+                f"{result['keywords']}\n{result['reasoning']}",
+                now,
+                job["url"],
+            ),
         )
-    conn.commit()
+
+        conn.commit()
+
+        log.info(
+            "DB updated for [%d/%d] %s",
+            completed,
+            len(jobs),
+            job.get("title", "?")[:60],
+        )
 
     elapsed = time.time() - t0
     log.info("Done: %d scored in %.1fs (%.1f jobs/sec)", len(results), elapsed, len(results) / elapsed if elapsed > 0 else 0)

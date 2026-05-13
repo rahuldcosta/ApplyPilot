@@ -176,10 +176,19 @@ def generate_dashboard(output_path: str | None = None) -> str:
 
         apply_html = ""
         if apply_url:
-            apply_html = f'<a href="{apply_url}" class="apply-link" target="_blank">Apply</a>'
+            apply_html = f'''
+            <a href="{apply_url}" class="apply-link" target="_blank">
+              Apply
+            </a>
+
+            <button class="apply-link applied-btn"
+                    onclick="markApplied(this)">
+              Applied
+            </button>
+            '''
 
         job_sections += f"""
-        <div class="job-card" data-score="{score}" data-site="{escape(j['site'] or '')}" data-location="{location.lower()}">
+        <div class="job-card" data-job-id="{url}" data-score="{score}" data-site="{escape(j['site'] or '')}" data-location="{location.lower()}">
           <div class="card-header">
             <span class="score-pill" style="background:{'#10b981' if score >= 7 else '#f59e0b'}">{score}</span>
             <a href="{url}" class="job-title" target="_blank">{title}</a>
@@ -280,6 +289,16 @@ def generate_dashboard(output_path: str | None = None) -> str:
   .card-footer {{ display: flex; justify-content: flex-end; }}
   .apply-link {{ font-size: 0.8rem; color: #60a5fa; text-decoration: none; padding: 0.3rem 0.8rem; border: 1px solid #60a5fa33; border-radius: 6px; font-weight: 500; }}
   .apply-link:hover {{ background: #60a5fa22; }}
+  .applied-btn {{
+  background: #10b98122;
+  border: 1px solid #10b98155;
+  color: #10b981;
+  cursor: pointer;
+  }}
+
+  .applied-btn:hover {{
+  background: #10b98144;
+  }}
 
   /* Expandable full description */
   .full-desc-details {{ margin-bottom: 0.75rem; }}
@@ -313,12 +332,33 @@ def generate_dashboard(output_path: str | None = None) -> str:
 
 <div class="filters">
   <span class="filter-label">Score:</span>
-  <button class="filter-btn active" onclick="filterScore(0)">All 5+</button>
-  <button class="filter-btn" onclick="filterScore(7)">7+ Strong</button>
-  <button class="filter-btn" onclick="filterScore(8)">8+ Excellent</button>
-  <button class="filter-btn" onclick="filterScore(9)">9+ Perfect</button>
+  <button class="filter-btn active" onclick="filterScore(0, this)">All 5+</button>
+  <button class="filter-btn" onclick="filterScore(7, this)">7+ Strong</button>
+  <button class="filter-btn" onclick="filterScore(8, this)">8+ Excellent</button>
+  <button class="filter-btn" onclick="filterScore(9, this)">9+ Perfect</button>
   <span class="filter-label" style="margin-left:1rem">Search:</span>
   <input type="text" class="search-input" placeholder="Filter by title, site..." oninput="filterText(this.value)">
+  <button class="filter-btn" onclick="exportAppliedJobs()">
+  Export Applied
+  </button>
+
+  <button class="filter-btn"
+        onclick="document.getElementById('importAppliedInput').click()">
+  Import Applied
+  </button>
+
+  <button class="filter-btn"
+        onclick="resetAppliedJobs()">
+  Reset Applied
+  </button>
+
+  <input
+  type="file"
+  id="importAppliedInput"
+  accept=".json"
+  style="display:none"
+  onchange="importAppliedJobs(event)"
+  />
 </div>
 
 <div class="score-section">
@@ -337,51 +377,211 @@ def generate_dashboard(output_path: str | None = None) -> str:
 {job_sections}
 
 <script>
+
 let minScore = 0;
 let searchText = '';
 
-function filterScore(min) {{
-  minScore = min;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  applyFilters();
+function getAppliedJobs() {{
+
+    return JSON.parse(
+        localStorage.getItem("applied_jobs") || "[]"
+    );
+}}
+
+function saveAppliedJobs(jobs) {{
+
+    localStorage.setItem(
+        "applied_jobs",
+        JSON.stringify(jobs)
+    );
+}}
+
+function markApplied(button) {{
+
+    const card = button.closest(".job-card");
+
+    const jobId = card.dataset.jobId;
+
+    let appliedJobs = getAppliedJobs();
+
+    if (!appliedJobs.includes(jobId)) {{
+
+        appliedJobs.push(jobId);
+
+        saveAppliedJobs(appliedJobs);
+    }}
+
+    card.classList.add("hidden");
+    hideAppliedJobs();
+    applyFilters();
+}}
+
+function hideAppliedJobs() {{
+
+    const appliedJobs = getAppliedJobs();
+
+    document.querySelectorAll(".job-card").forEach(card => {{
+
+        const jobId = card.dataset.jobId;
+
+        if (appliedJobs.includes(jobId)) {{
+
+            card.classList.add("hidden-applied");
+        }}
+    }});
+}}
+
+function exportAppliedJobs() {{
+
+    const appliedJobs = getAppliedJobs();
+
+    const blob = new Blob(
+        [JSON.stringify(appliedJobs, null, 2)],
+        {{ type: "application/json" }}
+    );
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+
+    a.href = url;
+
+    a.download = "applied_jobs.json";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+}}
+
+function importAppliedJobs(event) {{
+
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {{
+
+        try {{
+
+            const importedJobs = JSON.parse(e.target.result);
+
+            if (!Array.isArray(importedJobs)) {{
+
+                alert("Invalid file");
+
+                return;
+            }}
+
+            saveAppliedJobs(importedJobs);
+
+            alert(
+                `Imported ${{importedJobs.length}} applied jobs`
+            );
+
+            location.reload();
+
+        }} catch (err) {{
+
+            alert("Failed to import JSON");
+        }}
+    }};
+
+    reader.readAsText(file);
+}}
+
+function resetAppliedJobs() {{
+
+    localStorage.removeItem("applied_jobs");
+
+    location.reload();
+}}
+
+function filterScore(min, btn=null) {{
+
+    minScore = min;
+
+    document.querySelectorAll('.filter-btn')
+        .forEach(b => b.classList.remove('active'));
+
+    if (btn) {{
+        btn.classList.add('active');
+    }}
+
+    applyFilters();
 }}
 
 function filterText(text) {{
-  searchText = text.toLowerCase();
-  applyFilters();
+
+    searchText = text.toLowerCase();
+
+    applyFilters();
 }}
 
 function applyFilters() {{
-  let shown = 0;
-  let total = 0;
-  document.querySelectorAll('.job-card').forEach(card => {{
-    total++;
-    const score = parseInt(card.dataset.score) || 0;
-    const text = card.textContent.toLowerCase();
-    const scoreMatch = score >= (minScore || 5);
-    const textMatch = !searchText || text.includes(searchText);
-    if (scoreMatch && textMatch) {{
-      card.classList.remove('hidden');
-      shown++;
-    }} else {{
-      card.classList.add('hidden');
-    }}
-  }});
-  document.getElementById('job-count').textContent = `Showing ${{shown}} of ${{total}} jobs`;
 
-  // Hide empty score groups
-  document.querySelectorAll('.score-header').forEach(header => {{
-    const grid = header.nextElementSibling;
-    if (grid && grid.classList.contains('job-grid')) {{
-      const visible = grid.querySelectorAll('.job-card:not(.hidden)').length;
-      header.style.display = visible ? '' : 'none';
-      grid.style.display = visible ? '' : 'none';
-    }}
-  }});
+    let shown = 0;
+
+    let total = 0;
+
+    document.querySelectorAll('.job-card').forEach(card => {{
+
+        total++;
+
+        const score = parseInt(card.dataset.score) || 0;
+
+        const text = card.textContent.toLowerCase();
+
+        const scoreMatch = score >= (minScore || 5);
+
+        const textMatch =
+            !searchText || text.includes(searchText);
+
+        const hiddenApplied =
+            card.classList.contains("hidden-applied");
+
+        if (scoreMatch && textMatch && !hiddenApplied) {{
+
+            card.classList.remove('hidden');
+
+            shown++;
+
+        }} else {{
+
+            card.classList.add('hidden');
+        }}
+    }});
+
+    document.getElementById('job-count').textContent =
+        `Showing ${{shown}} of ${{total}} jobs`;
+
+    // Hide empty groups
+    document.querySelectorAll('.score-header').forEach(header => {{
+
+        const grid = header.nextElementSibling;
+
+        if (grid && grid.classList.contains('job-grid')) {{
+
+            const visible =
+                grid.querySelectorAll(
+                    '.job-card:not(.hidden)'
+                ).length;
+
+            header.style.display = visible ? '' : 'none';
+
+            grid.style.display = visible ? '' : 'none';
+        }}
+    }});
 }}
 
-applyFilters();
+document.addEventListener("DOMContentLoaded", () => {{
+
+    hideAppliedJobs();
+
+    applyFilters();
+}});
+
 </script>
 
 </body>

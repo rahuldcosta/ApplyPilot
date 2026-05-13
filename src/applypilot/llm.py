@@ -29,8 +29,11 @@ def _detect_provider() -> tuple[str, str, str]:
     """
     gemini_key = os.environ.get("GEMINI_API_KEY", "")
     openai_key = os.environ.get("OPENAI_API_KEY", "")
+    custom_llm_key = os.environ.get("CUSTOM_LLM_API_KEY", "")
+    custom_llm_url = os.environ.get("CUSTOM_LLM_API_URL", "")
     local_url = os.environ.get("LLM_URL", "")
     model_override = os.environ.get("LLM_MODEL", "")
+
 
     if gemini_key and not local_url:
         return (
@@ -41,9 +44,15 @@ def _detect_provider() -> tuple[str, str, str]:
 
     if openai_key and not local_url:
         return (
-            "https://api.openai.com/v1",
-            model_override or "gpt-4o-mini",
+            "https://integrate.api.nvidia.com/v1",
+            model_override or "meta/llama-3.3-70b-instruct",
             openai_key,
+        )
+    if custom_llm_key and not local_url:
+        return (
+            custom_llm_url,
+            model_override,
+            custom_llm_key,
         )
 
     if local_url:
@@ -55,7 +64,7 @@ def _detect_provider() -> tuple[str, str, str]:
 
     raise RuntimeError(
         "No LLM provider configured. "
-        "Set GEMINI_API_KEY, OPENAI_API_KEY, or LLM_URL in your environment."
+        "Set GEMINI_API_KEY, OPENAI_API_KEY,CUSTOM_LLM_API_KEY or LLM_URL in your environment."
     )
 
 
@@ -63,8 +72,8 @@ def _detect_provider() -> tuple[str, str, str]:
 # Client
 # ---------------------------------------------------------------------------
 
-_MAX_RETRIES = 5
-_TIMEOUT = 120  # seconds
+_MAX_RETRIES = 10
+_TIMEOUT = 300  # seconds
 
 # Base wait on first 429/503 (doubles each retry, caps at 60s).
 # Gemini free tier is 15 RPM = 4s minimum between requests; 10s gives headroom.
@@ -147,10 +156,11 @@ class LLMClient:
     # -- OpenAI-compat API --------------------------------------------------
 
     def _chat_compat(
-        self,
-        messages: list[dict],
-        temperature: float,
-        max_tokens: int,
+            self,
+            messages: list[dict],
+            temperature: float,
+            max_tokens: int,
+            response_format: dict | None = None,
     ) -> str:
         """Call the OpenAI-compatible endpoint."""
         headers: dict[str, str] = {"Content-Type": "application/json"}
@@ -162,7 +172,11 @@ class LLMClient:
             "messages": messages,
             "temperature": temperature,
             "max_tokens": max_tokens,
+            "stream": False,
         }
+
+        if response_format:
+            payload["response_format"] = response_format
 
         resp = self._client.post(
             f"{self.base_url}/chat/completions",
@@ -186,10 +200,11 @@ class LLMClient:
     # -- public API ---------------------------------------------------------
 
     def chat(
-        self,
-        messages: list[dict],
-        temperature: float = 0.0,
-        max_tokens: int = 4096,
+            self,
+            messages: list[dict],
+            temperature: float = 0.0,
+            max_tokens: int = 4096,
+            response_format: dict | None = None,
     ) -> str:
         """Send a chat completion request and return the assistant message text."""
         # Qwen3 optimization: prepend /no_think to skip chain-of-thought
@@ -205,7 +220,12 @@ class LLMClient:
                 if self._use_native_gemini:
                     return self._chat_native_gemini(messages, temperature, max_tokens)
 
-                return self._chat_compat(messages, temperature, max_tokens)
+                return self._chat_compat(
+                    messages,
+                    temperature,
+                    max_tokens,
+                    response_format=response_format,
+                )
 
             except _GeminiCompatForbidden as exc:
                 # Model not available on OpenAI-compat layer — switch to native.

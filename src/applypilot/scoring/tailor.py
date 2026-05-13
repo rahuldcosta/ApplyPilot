@@ -326,7 +326,7 @@ def judge_tailored_resume(
     ]
 
     client = get_client()
-    response = client.chat(messages, max_tokens=512, temperature=0.1)
+    response = client.chat(messages, max_tokens=65536, temperature=0.6)
 
     passed = "VERDICT: PASS" in response.upper()
     issues = "none"
@@ -345,30 +345,36 @@ def judge_tailored_resume(
 # ── Core Tailoring ───────────────────────────────────────────────────────
 
 def tailor_resume(
-    resume_text: str, job: dict, profile: dict,
-    max_retries: int = 3, validation_mode: str = "normal",
+    resume_text: str,
+    job: dict,
+    profile: dict,
+    max_retries: int = 3,
+    validation_mode: str = "normal",
 ) -> tuple[str, dict]:
-    """Generate a tailored resume via JSON output + fresh context on each retry.
+    """
+    Generate a tailored resume via JSON output + fresh context on each retry.
 
     Key design choices:
-    - LLM returns structured JSON, code assembles the text (no header leaks)
-    - Each retry starts a FRESH conversation (no apologetic spiral)
-    - Issues from previous attempts are noted in the system prompt
-    - Em dashes and smart quotes are auto-fixed, not rejected
+    - LLM returns structured JSON, code assembles the text
+    - Each retry starts a fresh conversation
+    - Issues from previous attempts are injected into retry prompt
+    - Em dashes and smart quotes are auto-fixed
 
-    Args:
-        resume_text:      Base resume text.
-        job:              Job dict with title, site, location, full_description.
-        profile:          User profile dict.
-        max_retries:      Maximum retry attempts.
-        validation_mode:  "strict", "normal", or "lenient".
-                          strict  -- banned words trigger retries; judge must pass
-                          normal  -- banned words = warnings only; judge can fail on last retry
-                          lenient -- banned words ignored; LLM judge skipped
-
-    Returns:
-        (tailored_text, report) where report contains validation details.
+    Validation modes:
+    - strict:
+        banned words trigger retries; judge must pass
+    - normal:
+        banned words = warnings only; judge can fail on last retry
+    - lenient:
+        banned words ignored; LLM judge skipped
     """
+    # print("\n========== JOB ==========\n")
+    # print(job)
+    # print("\n===================================\n")
+    #
+    # print("\n========== profile ==========\n")
+    # print(profile)
+    # print("\n===================================\n")
     job_text = (
         f"TITLE: {job['title']}\n"
         f"COMPANY: {job['site']}\n"
@@ -377,81 +383,334 @@ def tailor_resume(
     )
 
     report: dict = {
-        "attempts": 0, "validator": None, "judge": None,
-        "status": "pending", "validation_mode": validation_mode,
+        "attempts": 0,
+        "validator": None,
+        "judge": None,
+        "status": "pending",
+        "validation_mode": validation_mode,
     }
+
     avoid_notes: list[str] = []
+
     tailored = ""
+
     client = get_client()
+
     tailor_prompt_base = _build_tailor_prompt(profile)
 
     for attempt in range(max_retries + 1):
+
         report["attempts"] = attempt + 1
 
-        # Fresh conversation every attempt
+        log.info(
+            "[TAILOR][Attempt %d/%d] Processing '%s'",
+            attempt + 1,
+            max_retries + 1,
+            job.get("title", "unknown"),
+        )
+
+        # ----------------------------------------
+        # Fresh conversation every retry
+        # ----------------------------------------
         prompt = tailor_prompt_base
+
         if avoid_notes:
-            prompt += "\n\n## AVOID THESE ISSUES (from previous attempt):\n" + "\n".join(
-                f"- {n}" for n in avoid_notes[-5:]
+
+            prompt += (
+                "\n\n## AVOID THESE ISSUES "
+                "(from previous attempt):\n"
+            )
+
+            prompt += "\n".join(
+                f"- {n}"
+                for n in avoid_notes[-5:]
             )
 
         messages = [
-            {"role": "system", "content": prompt},
-            {"role": "user", "content": f"ORIGINAL RESUME:\n{resume_text}\n\n---\n\nTARGET JOB:\n{job_text}\n\nReturn the JSON:"},
+            {
+                "role": "system",
+                "content": (
+                    f"{prompt}\n\n"
+
+                    "You are a resume tailoring engine.\n\n"
+
+                    "Return ONLY valid JSON.\n\n"
+
+                    "Do NOT include:\n"
+                    "- markdown\n"
+                    "- explanations\n"
+                    "- comments\n"
+                    "- code fences\n"
+                    "- analysis\n"
+                    "- chain-of-thought\n"
+                    "- additional text\n\n"
+
+                    "The JSON MUST follow this EXACT schema:\n\n"
+
+                    "{\n"
+                    '  "title": "string",\n'
+                    '  "summary": "string",\n'
+                    '  "skills": {\n'
+                    '    "Languages": "comma separated string",\n'
+                    '    "Frameworks": "comma separated string",\n'
+                    '    "DevOps & Infra": "comma separated string",\n'
+                    '    "Databases": "comma separated string",\n'
+                    '    "Tools": "comma separated string"\n'
+                    "  },\n"
+                    '  "experience": [\n'
+                    "    {\n"
+                    '      "header": "string",\n'
+                    '      "subtitle": "string",\n'
+                    '      "bullets": [\n'
+                    '        "string"\n'
+                    "      ]\n"
+                    "    }\n"
+                    "  ],\n"
+                    '  "projects": [\n'
+                    "    {\n"
+                    '      "header": "string",\n'
+                    '      "subtitle": "string",\n'
+                    '      "bullets": [\n'
+                    '        "string"\n'
+                    "      ]\n"
+                    "    }\n"
+                    "  ],\n"
+                    '  "education": "string"\n'
+                    "}\n\n"
+
+                    "Rules:\n"
+                    "- Experience and projects MUST remain separate sections.\n"
+                    "- Do not place projects inside experience.\n"
+                    "- All arrays and objects MUST be properly closed.\n"
+                    "- Ensure commas are correctly placed.\n"
+                    "- Do not invent companies or technologies.\n"
+                    "- Do not repeat keywords excessively.\n"
+                    "- Use concise ATS-friendly wording.\n"
+                    "- Return exactly ONE JSON object.\n"
+                    "- Validate JSON syntax before responding.\n\n"
+
+                    "Return valid minified JSON matching the schema exactly."
+                ),
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"ORIGINAL RESUME:\n{resume_text}\n\n"
+                    f"---\n\n"
+                    f"TARGET JOB:\n{job_text}"
+                ),
+            },
         ]
 
-        raw = client.chat(messages, max_tokens=2048, temperature=0.4)
+        # ----------------------------------------
+        # LLM call
+        # ----------------------------------------
+        raw = client.chat(
+            messages,
+            max_tokens=1400,
+            temperature=0,
+            response_format={"type": "json_object"},
+        )
 
-        # Parse JSON from response
+        # print("\n========== RAW LLM OUTPUT ==========\n")
+        # print(raw)
+        # print("\n===================================\n")
+
+        # ----------------------------------------
+        # Parse JSON
+        # ----------------------------------------
         try:
+
             data = extract_json(raw)
-        except ValueError:
-            avoid_notes.append("Output was not valid JSON. Return ONLY a JSON object, nothing else.")
+
+        except ValueError as e:
+
+            log.error(
+                "[TAILOR][Attempt %d/%d] JSON extraction failed for '%s'",
+                attempt + 1,
+                max_retries + 1,
+                job.get("title", "unknown"),
+            )
+
+            log.error("JSON extraction error: %s", str(e))
+
+            log.error("Raw response:\n%s", raw)
+
+            avoid_notes.append(
+                "Output was not valid JSON. "
+                "Return ONLY a JSON object."
+            )
+
             continue
 
-        # Layer 1: Validate JSON fields
-        validation = validate_json_fields(data, profile, mode=validation_mode)
+        # ----------------------------------------
+        # Layer 1: Schema validation
+        # ----------------------------------------
+        validation = validate_json_fields(
+            data,
+            profile,
+            mode=validation_mode,
+        )
+
         report["validator"] = validation
 
         if not validation["passed"]:
-            # Only retry if there are hard errors (warnings never block)
+
+            log.error(
+                "[TAILOR][Attempt %d/%d] Validation FAILED for '%s'",
+                attempt + 1,
+                max_retries + 1,
+                job.get("title", "unknown"),
+            )
+
+            if validation.get("errors"):
+
+                log.error("Validation errors:")
+
+                for err in validation["errors"]:
+                    log.error("  - %s", err)
+
+            if validation.get("warnings"):
+
+                log.warning("Validation warnings:")
+
+                for warn in validation["warnings"]:
+                    log.warning("  - %s", warn)
+
+            log.error(
+                "Generated JSON:\n%s",
+                json.dumps(data, indent=2),
+            )
+
+            # Only retry on HARD validation errors
             avoid_notes.extend(validation["errors"])
+
             if attempt < max_retries:
+
+                log.info(
+                    "[TAILOR] Retrying '%s' due to validation failure...",
+                    job.get("title", "unknown"),
+                )
+
                 continue
-            # Last attempt — assemble whatever we got
+
+            # Last attempt — return best effort
             tailored = assemble_resume_text(data, profile)
+
             report["status"] = "failed_validation"
+
+            log.error(
+                "[TAILOR] Exhausted retries for '%s' "
+                "due to validation failures",
+                job.get("title", "unknown"),
+            )
+
             return tailored, report
 
-        # Assemble text (header injected by code, em dashes auto-fixed)
+        # ----------------------------------------
+        # Assemble final resume text
+        # ----------------------------------------
         tailored = assemble_resume_text(data, profile)
 
-        # Layer 2: LLM judge (catches subtle fabrication) — skipped in lenient mode
+        # ----------------------------------------
+        # Skip judge in lenient mode
+        # ----------------------------------------
         if validation_mode == "lenient":
-            report["judge"] = {"verdict": "SKIPPED", "passed": True, "issues": "none"}
+
+            report["judge"] = {
+                "verdict": "SKIPPED",
+                "passed": True,
+                "issues": "none",
+            }
+
             report["status"] = "approved"
+
+            log.info(
+                "[TAILOR] Approved '%s' in lenient mode",
+                job.get("title", "unknown"),
+            )
+
             return tailored, report
 
-        judge = judge_tailored_resume(resume_text, tailored, job.get("title", ""), profile)
+        # ----------------------------------------
+        # Layer 2: Judge validation
+        # ----------------------------------------
+        judge = judge_tailored_resume(
+            resume_text,
+            tailored,
+            job.get("title", ""),
+            profile,
+        )
+
         report["judge"] = judge
 
         if not judge["passed"]:
-            avoid_notes.append(f"Judge rejected: {judge['issues']}")
+
+            log.error(
+                "[TAILOR][Attempt %d/%d] Judge FAILED for '%s'",
+                attempt + 1,
+                max_retries + 1,
+                job.get("title", "unknown"),
+            )
+
+            log.error(
+                "Judge issues: %s",
+                judge.get("issues"),
+            )
+
+            log.error(
+                "Tailored resume:\n%s",
+                tailored,
+            )
+
+            avoid_notes.append(
+                f"Judge rejected: {judge['issues']}"
+            )
+
             if attempt < max_retries:
-                # In normal mode, only retry on judge failure if there are retries left
+
                 if validation_mode != "lenient":
+
+                    log.info(
+                        "[TAILOR] Retrying '%s' due to judge rejection...",
+                        job.get("title", "unknown"),
+                    )
+
                     continue
-            # Accept best attempt on last retry (all modes) or if lenient
+
+            # Accept final attempt with warning
             report["status"] = "approved_with_judge_warning"
+
+            log.warning(
+                "[TAILOR] Approved '%s' WITH judge warnings",
+                job.get("title", "unknown"),
+            )
+
             return tailored, report
 
-        # Both passed
+        # ----------------------------------------
+        # Success
+        # ----------------------------------------
         report["status"] = "approved"
+
+        log.info(
+            "[TAILOR] Approved '%s'",
+            job.get("title", "unknown"),
+        )
+
         return tailored, report
 
+    # ----------------------------------------
+    # Retries exhausted
+    # ----------------------------------------
     report["status"] = "exhausted_retries"
-    return tailored, report
 
+    log.error(
+        "[TAILOR] Exhausted all retries for '%s'",
+        job.get("title", "unknown"),
+    )
+
+    return tailored, report
 
 # ── Batch Entry Point ────────────────────────────────────────────────────
 
